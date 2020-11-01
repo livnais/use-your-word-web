@@ -1,101 +1,100 @@
-import React, { useState, useEffect } from "react";
-import TopbarErrorMessage from "../../Components/TopbarError";
-import io from "socket.io-client";
-import LoaderScreen from "../../Components/Loading";
-import "./styles.css";
-import GameScreen from "../Game";
+import React, { useState, useEffect } from "react"
+import TopbarErrorMessage from "../../Components/TopbarError"
+import io from "socket.io-client"
+import LoaderScreen from "../../Components/Loading"
+import "./styles.css"
+import GameScreen from "../Game"
 
-
-const ENDPOINT = "http://127.0.0.1:4001";
+const ENDPOINT = "http://127.0.0.1:4001"
 const HomeScreen = () => {
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [messageLoading, setMessageLoading] = useState("");
-  const [messageError, setMessageError] = useState("");
-  const [randomColor, setRandomColor] = useState("#6de387");
-  const [connected, setConnected] = useState(false);
-  const [users, setUsers] = useState([] as any);
-  const [myUser, setMyUser] = useState<any>();
-  const [socketIO,setSocketIO] = useState<SocketIOClient.Socket>();
+  const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [messageLoading, setMessageLoading] = useState("")
+  const [messageError, setMessageError] = useState("")
+  const [randomColor, setRandomColor] = useState("#6de387")
+  const [connected, setConnected] = useState(false)
+  const [users, setUsers] = useState([] as any)
+  const [myUser, setMyUser] = useState<any>()
+  const [socketIO, setSocketIO] = useState<SocketIOClient.Socket>()
 
+  let socket: any
 
-let socket: any;
+  useEffect(() => {
+    setRandomColor(`#${Math.floor(Math.random() * 16777215).toString(16)}`)
+  }, [])
 
-useEffect(()=>{
-  setRandomColor(`#${Math.floor(Math.random() * 16777215).toString(16)}`);
-},[])
-
-
-
-  const connexion =()=>{ 
+  const connexion = () => {
     //@ts-ignore
-    const name = document.getElementById("nameOfPlayer").value;
+    const name = document.getElementById("nameOfPlayer").value
     if (name.trim() === "") {
       //@ts-ignore
-      document.getElementById("nameOfPlayer").value = "";
-      setMessageError("Veuiller saisir un pseudo !");
-      setError(true);
+      document.getElementById("nameOfPlayer").value = ""
+      setMessageError("Veuiller saisir un pseudo !")
+      setError(true)
     } else {
-      setError(false);   
-      setLoading(true);
-      setMessageLoading("CHARGEMENT...");
+      setError(false)
+      setLoading(true)
+      setMessageLoading("CHARGEMENT...")
       var user = myUser || {
-        id:"",
-        messageType:"",
-        userId:"",
+        id: "",
+        messageType: "",
+        userId: "",
         name: name,
         duplicateName: "",
-        team:"",
-        answer:"",
-        vote:"",
-        ready:false,
-        point:0,
+        team: "",
+        answer: "",
+        vote: "",
+        ready: false,
+        point: 0,
       }
-      socket = io.connect(ENDPOINT, { query: `user=${JSON.stringify(user)}`});
-      setSocketIO(socket);
-      socketMethod();
+      socket = io.connect(ENDPOINT, { query: `user=${JSON.stringify(user)}` })
+      setSocketIO(socket)
+      socketMethod()
     }
   }
 
-
-  const socketMethod = ()=>{
+  const socketMethod = () => {
     socket.on("connect_error", (data: string) => {
-      setMessageLoading("CONNEXION EN COURS...");
+      setMessageLoading("CONNEXION EN COURS...")
       setMyUser(undefined)
-      setLoading(true);
-      setConnected(false);
-    });
-
+      setLoading(true)
+      setConnected(false)
+    })
 
     socket.on("getUsers", (data: any) => {
-      const {player, players} = data;
-      if(player && player.id && player.id === socket.id){
-        setMyUser(player);
-        if(socketIO) socketIO.io.opts.query =`user=${JSON.stringify(player)}`;
+      const { player, players } = data
+      if (player && player.id && player.id === socket.id) {
+        setMyUser(player)
+        if (socketIO) socketIO.io.opts.query = `user=${JSON.stringify(player)}`
       }
-      setUsers(players);
-      setLoading(false);
-      setConnected(true);
-    });
+      setUsers(players)
+      setLoading(false)
+      setConnected(true)
+    })
   }
 
   const callBackError = (value: boolean) => {
-    setError(value);
-  };
+    setError(value)
+  }
 
-  const setMyUserInfo = (attribute:string,value:any)=>{
-    const user = myUser;
-    user["messageType"] = attribute;
-    user[attribute] = value;
+  const setMyUserInfo = (attribute: string, value: any) => {
+    const user = myUser
+    user["messageType"] = attribute
+    user[attribute] = value
     setMyUser(user)
-    if(socketIO){
-      socketIO.emit("updateUser",JSON.stringify(user))
-      socketIO.io.opts.query =`user=${JSON.stringify(user)}`;
+    if (socketIO) {
+      socketIO.emit("updateUser", JSON.stringify(user))
+      socketIO.io.opts.query = `user=${JSON.stringify(user)}`
     }
   }
 
-  return connected  && myUser ? (
-    <GameScreen socket={socketIO}  setMyUserInfo={setMyUserInfo} myUser={myUser} users={users} />
+  return connected && myUser ? (
+    <GameScreen
+      socket={socketIO}
+      setMyUserInfo={setMyUserInfo}
+      myUser={myUser}
+      users={users}
+    />
   ) : (
     <div style={{ backgroundColor: randomColor }} className="containerHome">
       <LoaderScreen
@@ -114,13 +113,13 @@ useEffect(()=>{
           placeholder="Entrer votre pseudo..."
           id="nameOfPlayer"
         />
-     
+
         <button onClick={() => connexion()} className="button_connexion">
           CONNEXION
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default HomeScreen;
+export default HomeScreen

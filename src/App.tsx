@@ -1,8 +1,8 @@
-import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import "./App.css";
-import HomeScreen from "./Screens/Home";
-import GameScreen from "./Screens/Game";
+import React from "react"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+import "./App.css"
+import HomeScreen from "./Screens/Home"
+import GameScreen from "./Screens/Game"
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
         <Route path="/" component={HomeScreen} />
       </Switch>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
