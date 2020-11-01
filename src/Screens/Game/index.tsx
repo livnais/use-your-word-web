@@ -8,7 +8,7 @@ import VideoComponent from "../../Components/ComponentVideo"
 import TextComponent from "../../Components/ComponentText"
 import Carousel from "react-bootstrap/Carousel"
 import "bootstrap/dist/css/bootstrap.min.css"
-
+var _ = require("lodash")
 interface Props {
   myUser: any
   users: any
@@ -27,15 +27,20 @@ const GameScreen = (props: Props) => {
   )
   const [dataJeu, setDataJeu] = useState<any>(null)
   const [messageError, setMessageError] = useState<string>("")
+  const [answerData, setAnswerData] = useState<string>("")
   const [displayAnswer, setDisplayAnswer] = useState<boolean>(false)
+  const [finishGame, setFinishGame] = useState<boolean>(false)
+  const [start, setStart] = useState<boolean>(false)
 
   useEffect(() => {
     socket.on("data-jeu", (data: any) => {
       const result = JSON.parse(data)
       setDataJeu(result)
-      setState(result.rule)
+      setState(result.ele_statement)
       setDisplayAnswer(false)
-      setMyUserInfo("anwser", "")
+      setAnswerData("")
+      setStart(true)
+      console.log("data-jeu", result)
     })
 
     socket.on("displayAnswer", (data: boolean) => {
@@ -53,11 +58,11 @@ const GameScreen = (props: Props) => {
         setMyUserInfo("ready", false)
       }
     })
+    socket.on("finish", (data: boolean) => {
+      setFinishGame(data)
+      console.log("finish")
+    })
   }, [])
-
-  useEffect(() => {
-    console.log("myUser", myUser)
-  }, [myUser])
 
   const getTeamName = (team: string) => {
     if (team) {
@@ -95,7 +100,40 @@ const GameScreen = (props: Props) => {
     } else {
       setError(false)
       setMyUserInfo("answer", response)
+      setAnswerData(response)
     }
+  }
+
+  useEffect(() => {
+    console.log({ myUser })
+  }, [myUser])
+
+  const getPoint = (u: [any]) => {
+    const index = u.findIndex((p) => p.userId === myUser.userId)
+    if (index > -1) {
+      return `${u[index].point}`
+    }
+    return "0"
+  }
+
+  const getWinner = () => {
+    const win = _.maxBy(users, (o: any) => o.point)
+    return win ? (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <h1>
+          le gagnant est {win.name}
+          {win.duplicateName}
+        </h1>
+        <h3>Avec {win.point} point(s)</h3>
+      </div>
+    ) : null
   }
 
   return (
@@ -103,6 +141,14 @@ const GameScreen = (props: Props) => {
       {error && (
         <TopbarErrorMessage message={messageError} setError={setError} />
       )}
+
+      <Modal
+        onCancel={() => setFinishGame(false)}
+        onOk={() => setFinishGame(false)}
+        visible={finishGame}
+      >
+        {getWinner()}
+      </Modal>
       <Modal
         visible={isVisible}
         cancelText="Non"
@@ -137,7 +183,7 @@ const GameScreen = (props: Props) => {
         <div className="headerGame">
           <div className="headerGamePoint">
             <span className="timerSpanTitle">Point(s)</span>
-            <span className="timerSpan">{myUser.point}</span>
+            <span className="timerSpan">{getPoint(users)}</span>
           </div>
           <div className="headerGameState">
             <span className="timerSpanTitle">{state}</span>
@@ -148,34 +194,40 @@ const GameScreen = (props: Props) => {
           </div>
         </div>
         <div className="bodyGame">
-          {dataJeu && dataJeu.type === 1 && !displayAnswer && (
-            <ImageComponent image={dataJeu.path} />
+          {dataJeu && dataJeu.ele_type === "0" && !displayAnswer && (
+            <ImageComponent image={dataJeu.ele_url} />
           )}
-          {dataJeu && dataJeu.type === 2 && !displayAnswer && (
-            <VideoComponent video={dataJeu.path} />
+          {dataJeu && dataJeu.ele_type === "1" && !displayAnswer && (
+            <VideoComponent video={dataJeu.ele_url} />
           )}
-          {dataJeu && dataJeu.type === 3 && !displayAnswer && (
-            <TextComponent text1={dataJeu.text1} text2={dataJeu.text2} />
+          {dataJeu && dataJeu.ele_type === "2" && !displayAnswer && (
+            <TextComponent
+              text1={dataJeu.ele_text1}
+              text2={dataJeu.ele_text2}
+            />
           )}
           {displayAnswer && (
             <Carousel>
               {users.map((user: any) => (
-                <Carousel.Item key={"index" + user.userId}>
-                  {dataJeu.type === 1 && (
-                    <ImageComponent image={dataJeu.path}></ImageComponent>
+                <Carousel.Item
+                  key={"index" + user.userId}
+                  style={{ height: dataJeu.ele_type === "2" ? 300 : "auto" }}
+                >
+                  {dataJeu.ele_type === "0" && (
+                    <ImageComponent image={dataJeu.ele_url}></ImageComponent>
                   )}
-                  {dataJeu.type === 2 && (
-                    <VideoComponent video={dataJeu.path} />
+                  {dataJeu.ele_type === "1" && (
+                    <VideoComponent video={dataJeu.ele_url} />
                   )}
-                  {dataJeu.type === 3 && (
+                  {dataJeu.ele_type === "2" && (
                     <TextComponent
-                      text1={dataJeu.text1}
+                      text1={dataJeu.ele_text1}
                       answer={user.answer}
-                      text2={dataJeu.text2}
+                      text2={dataJeu.ele_text2}
                     />
                   )}
                   <Carousel.Caption>
-                    {dataJeu.type !== 3 && (
+                    {dataJeu.ele_type !== "2" && (
                       <div className="contentAnswerVote">
                         <span className="spanAnswer">{user.answer}</span>
                       </div>
@@ -195,7 +247,7 @@ const GameScreen = (props: Props) => {
           )}
         </div>
         <div className="footerGame">
-          {!isReady && (
+          {!isReady && !start && (
             <button
               onClick={() => {
                 setMyUserInfo("ready", true)
@@ -206,15 +258,20 @@ const GameScreen = (props: Props) => {
               Je suis prêt
             </button>
           )}
-          {dataJeu && isReady && !myUser.answer && !displayAnswer && (
+          {dataJeu && isReady && !answerData && !displayAnswer && (
             <div className="contentAnswer">
-              <input type="text" id="answer" className="inputAnswer" />
+              <input
+                type="text"
+                id="answer"
+                placeholder="Saisez votre réponse"
+                className="inputAnswer"
+              />
               <button onClick={() => answer()} className="buttonReady">
                 Valider
               </button>
             </div>
           )}
-          {myUser.answer && displayAnswer && (
+          {answerData && displayAnswer && (
             <span className="textAnswer">{myUser.answer}</span>
           )}
         </div>

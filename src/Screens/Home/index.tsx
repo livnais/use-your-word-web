@@ -62,11 +62,15 @@ const HomeScreen = () => {
     })
 
     socket.on("getUsers", (data: any) => {
-      const { player, players } = data
-      if (player && player.id && player.id === socket.id) {
-        setMyUser(player)
-        if (socketIO) socketIO.io.opts.query = `user=${JSON.stringify(player)}`
+      const { players } = data
+
+      const index = players.findIndex((p: any) => p.id === socket.id)
+      if (index > -1) {
+        setMyUser(players[index])
+        console.log("socketMethod")
       }
+
+      console.log("getUsers", players)
       setUsers(players)
       setLoading(false)
       setConnected(true)
@@ -80,6 +84,9 @@ const HomeScreen = () => {
   const setMyUserInfo = (attribute: string, value: any) => {
     const user = myUser
     user["messageType"] = attribute
+    if (attribute !== "ready") {
+      user["ready"] = true
+    }
     user[attribute] = value
     setMyUser(user)
     if (socketIO) {

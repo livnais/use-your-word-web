@@ -10,7 +10,7 @@ const VideoComponent = (props: Props) => {
   const { video, answer } = props
   return (
     <div className="videoComponentContainer">
-      <video className="videoContent" src={video} controls>
+      <video className="videoContent" autoPlay src={video} controls>
         Votre navigateur ne gère pas l'élément <code>video</code>.
       </video>
       {answer && <span className="spanVideoComponent"></span>}
