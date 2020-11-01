@@ -1,0 +1,159 @@
+.containerGame {
+  display: flex;
+  flex-direction: row;
+}
+.contentPlayers {
+  width: 20%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: cornflowerblue;
+}
+.contentGame {
+  width: 80%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.headerGame {
+  width: 100%;
+  height: 15vh;
+  display: flex;
+  flex-direction: row;
+}
+.bodyGame {
+  display: flex;
+  width: 100%;
+  height: 70vh;
+  background-color: blueviolet;
+}
+.footerGame {
+  display: flex;
+  width: 100%;
+  height: 15vh;
+  background-color: lightgray;
+  justify-content: center;
+  align-items: center;
+}
+.headerGamePoint {
+  display: flex;
+  width: 15%;
+  height: 100%;
+  background-color: teal;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+}
+.headerGameState {
+  display: flex;
+  width: 70%;
+  height: 100%;
+  background-color: royalblue;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.headerGameTime {
+  display: flex;
+  width: 15%;
+  height: 100%;
+  flex-direction: column;
+  background-color: sandybrown;
+  justify-content: center;
+  align-items: center;
+}
+.timerSpanTitle {
+  font-size: 25px;
+  color: white;
+  font-weight: 900;
+}
+
+.timerSpan {
+  font-size: 50px;
+  color: white;
+  font-weight: 900;
+}
+.title {
+  font-size: 20px;
+  font-weight: 900;
+  color: white;
+  margin: 20px;
+}
+
+.item {
+  font-size: 15px;
+  font-weight: 700;
+  color: #27408a;
+  margin: 5px 0 5px 20px;
+}
+.inputTeam {
+  width: 80%;
+  padding: 5px;
+}
+
+.buttonReady {
+  padding: 10px 20px 10px 20px;
+  font-size: 20px;
+  font-weight: 900;
+  background-color: limegreen;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.contentAnswer {
+  display: flex;
+  flex-direction: row;
+}
+
+.inputAnswer {
+  width: 400px;
+  margin-right: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 5px;
+}
+.textAnswer {
+  font-weight: 900;
+  font-size: 30px;
+  color: white;
+}
+.contentCarousel {
+  display: flex;
+  width: 100%;
+}
+.carousel {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.spanAnswer {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.carousel-caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.buttonAnswerVote {
+  padding: 10px 20px 10px 20px;
+  font-size: 20px;
+  font-weight: 900;
+  background-color: #077e0de1;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.contentAnswerVote {
+  background-color: #00000090;
+  padding: 10px;
+}

@@ -1,0 +1,54 @@
+.containerHome {
+  display: flex;
+  height: 100vh;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  /* background-color: #6de387; */
+}
+
+@font-face {
+  font-family: "Space";
+  font-weight: bold;
+  src: url("../../assets/fonts/space.ttf");
+}
+
+.contentHome {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  margin: auto;
+  padding: 2%;
+  background-color: #00000080;
+  text-align: center;
+  border-radius: 10%;
+}
+
+.game_name {
+  font-family: Space;
+  font-size: 40px;
+  color: white;
+}
+
+.input_name {
+  font-size: 20px;
+  font-weight: 900;
+  text-align: center;
+  padding: 5px;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.button_connexion {
+  padding: 10px;
+  margin-top: 5%;
+  margin-left: 20%;
+  margin-right: 20%;
+  font-size: 20px;
+  font-weight: 900;
+  background-color: #7c8eff;
+  color: white;
+  border: 0;
+  cursor: pointer;
+}

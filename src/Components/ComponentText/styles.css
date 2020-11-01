@@ -1,0 +1,13 @@
+.textComponentContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.textContent {
+  font-weight: 900;
+  font-size: 30px;
+  color: white;
+}

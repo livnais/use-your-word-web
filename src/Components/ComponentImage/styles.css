@@ -1,0 +1,12 @@
+.imageComponentContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.imageComponentContent {
+  width: 70%;
+  object-fit: contain;
+}

@@ -1,0 +1,15 @@
+.container-loader {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  align-items: center;
+  background-color: #000000cc;
+  justify-content: center;
+}
+
+.text-loading {
+  font-weight: 900;
+  color: white;
+}

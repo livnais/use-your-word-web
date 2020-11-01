@@ -1,0 +1,21 @@
+.content-error {
+  position: absolute;
+  top: 0;
+  width: 100%;
+
+  background-color: #fa5541;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  z-index: 99999;
+}
+
+.text-error {
+  font-weight: 900;
+  font-size: 20px;
+  align-self: center;
+  color: azure;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

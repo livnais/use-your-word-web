@@ -1,0 +1,16 @@
+.videoComponentContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.videoContent {
+  width: 100%;
+}
+
+.spanVideoComponent {
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
