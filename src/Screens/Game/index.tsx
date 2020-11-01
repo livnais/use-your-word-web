@@ -8,7 +8,7 @@ import VideoComponent from "../../Components/ComponentVideo";
 import TextComponent from "../../Components/ComponentText";
 import Carousel from 'react-bootstrap/Carousel'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { createPartiallyEmittedExpression } from "typescript";
+
 interface Props {
   myUser: any;
   users: any;
@@ -26,6 +26,7 @@ const GameScreen = (props: Props) => {
   const [dataJeu,setDataJeu] = useState<any>(null);
   const [messageError,setMessageError] = useState<string>("");
   const [displayAnswer,setDisplayAnswer] = useState<boolean>(false)
+  const [stateGame,setStateGame] = useState<string>("stateReady");
   useEffect(() => {
     socket.on("data-jeu",(data:any)=>{
       const result = JSON.parse(data)
@@ -34,8 +35,12 @@ const GameScreen = (props: Props) => {
        setDisplayAnswer(false)
     })
 
-    socket.on("displayAnswer",(data:any)=>{
-      setDisplayAnswer(true);
+    socket.on("displayAnswer",(data:boolean)=>{
+      setDisplayAnswer(data);
+    })
+
+    socket.on("StateGame",(data:string)=>{
+
     })
 
     socket.on("timer",(data:string)=>{
@@ -98,36 +103,6 @@ if(response.trim()===""){
  } 
 }
 
-
-const ItemAnswer = (id:string,answer:string) =>{
-  
-  return (
-    <Carousel.Item>
-      {dataJeu.type === 1 && 
-      (<ImageComponent image={dataJeu.path} ></ImageComponent>)
-      }
-     {dataJeu.type === 2 && 
-      (<VideoComponent video={dataJeu.path} />)
-      }
-    {dataJeu.type === 3 && 
-      (<TextComponent text1={dataJeu.text1} text2={dataJeu.text2} />)
-      }
-      <Carousel.Caption>
-        {dataJeu.type !== 3 && 
-        (
-          <div className="contentAnswerVote">
-          <span className="spanAnswer">{answer}</span>
-         </div>
-        )
-        }
-      <button onClick={()=> console.log("YOLO click")} className="buttonAnswerVote">
-          Voter pour cette réponse
-          </button>
-      </Carousel.Caption>
-    </Carousel.Item>
-  )
-}
-
   return (
     <div className="containerGame">
             {error && (
@@ -179,8 +154,7 @@ const ItemAnswer = (id:string,answer:string) =>{
        {displayAnswer && (
       
 <Carousel>
-
-     { users.forEach((user:any) => 
+     {users.map((user:any) => (
         <Carousel.Item>
         {dataJeu.type === 1 && 
         (<ImageComponent image={dataJeu.path} ></ImageComponent>)
@@ -195,16 +169,18 @@ const ItemAnswer = (id:string,answer:string) =>{
           {dataJeu.type !== 3 && 
           (
             <div className="contentAnswerVote">
-            <span className="spanAnswer">{user.user}</span>
+            <span className="spanAnswer">{user.answer}</span>
            </div>
           )
           }
-        <button onClick={()=> console.log("YOLO click")} className="buttonAnswerVote">
-            Voter pour cette réponse
-            </button>
+          { myUser.userId!==user.userId
+            && (   <button onClick={()=> setMyUserInfo("vote",user.userId)} className="buttonAnswerVote">
+Voter pour cette réponse
+</button>)
+            }
         </Carousel.Caption>
       </Carousel.Item>
-      )}
+       ))}
 </Carousel>
 )}
         </div>
